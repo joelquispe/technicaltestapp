@@ -5,14 +5,14 @@ import 'package:technical_test_app/features/matrix/ui/blocs/matrix/matrix_bloc.d
 import 'package:technical_test_app/ui/layouts/main_layout.dart';
 import 'package:technical_test_app/ui/widgets/custom_text_field_widget.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class MatrixScreen extends StatefulWidget {
+  const MatrixScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MatrixScreen> createState() => MatrixScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class MatrixScreenState extends State<MatrixScreen> {
   final TextEditingController _matrixInputController = TextEditingController(
     text: "[[1, 2], [3, 4]]",
   );
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: CustomTextFieldWidget(
                       label: 'Matriz',
                       hintText: '[[1, 2], [3, 4]]',
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       controller: _matrixInputController,
                       onSubmitted: (value) {
                         context.read<MatrixBloc>().add(UpdateMatrix(value));

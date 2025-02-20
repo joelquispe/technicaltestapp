@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         title: 'Technical Test App',
-        home: HomeScreen(),
+        home: MatrixScreen(),
       ),
     );
   }

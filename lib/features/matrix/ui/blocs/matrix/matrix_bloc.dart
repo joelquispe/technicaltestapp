@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:meta/meta.dart';
+import 'package:technical_test_app/common/utils/toast_util.dart';
 
-import 'package:technical_test_app/features/utils/matrix_utils.dart';
+import 'package:technical_test_app/features/matrix/utils/matrix_utils.dart';
 
 part 'matrix_event.dart';
 part 'matrix_state.dart';
@@ -28,7 +31,8 @@ class MatrixBloc extends Bloc<MatrixEvent, MatrixState> {
 
       emit(MatrixUpdated(newMatrix));
     } on FormatException catch (e) {
-      emit(MatrixError("Formato de matriz inválido: ${e.message}"));
+      log(e.message);
+      emit(MatrixError("Formato de matriz inválido, vuelva a intentarlo"));
     } catch (e) {
       emit(MatrixError("Error : $e"));
     }
@@ -42,6 +46,10 @@ class MatrixBloc extends Bloc<MatrixEvent, MatrixState> {
     }
 
     List<List<int>> rotatedMatrix = MatrixUtils.rotate(currentMatrix);
+
+    // Mostrar toast
+    ToastUtil.showToast("Matriz rotada");
+
     emit(MatrixUpdated(rotatedMatrix));
   }
 
