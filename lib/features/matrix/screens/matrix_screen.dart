@@ -32,44 +32,9 @@ class MatrixScreenState extends State<MatrixScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: CustomTextFieldWidget(
-                      label: 'Matriz',
-                      hintText: '[[1, 2], [3, 4]]',
-                      keyboardType: TextInputType.text,
-                      controller: _matrixInputController,
-                      onSubmitted: (value) {
-                        context.read<MatrixBloc>().add(UpdateMatrix(value));
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<MatrixBloc>().add(RotateMatrix());
-                    },
-                    child: const Text("Rotar"),
-                  ),
-                ],
-              ),
+              _buildMatrixInputRow(context),
               const SizedBox(height: 20),
-              BlocBuilder<MatrixBloc, MatrixState>(
-                builder: (context, state) {
-                  if (state is MatrixInitial || state is MatrixUpdated) {
-                    final matrix = state is MatrixInitial
-                        ? (state).matrix
-                        : (state as MatrixUpdated).matrix;
-                    return buildMatrixView(matrix);
-                  } else if (state is MatrixError) {
-                    return Text(state.message,
-                        style: const TextStyle(color: Colors.red));
-                  }
-                  return const CircularProgressIndicator();
-                },
-              ),
+              _buildMatrixView(context)
             ],
           ),
         ),
@@ -77,7 +42,49 @@ class MatrixScreenState extends State<MatrixScreen> {
     );
   }
 
-  Widget buildMatrixView(List<List<int>> matrix) {
+  Widget _buildMatrixInputRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: CustomTextFieldWidget(
+            label: 'Matriz',
+            hintText: '[[1, 2], [3, 4]]',
+            keyboardType: TextInputType.text,
+            controller: _matrixInputController,
+            onSubmitted: (value) {
+              context.read<MatrixBloc>().add(UpdateMatrix(value));
+            },
+          ),
+        ),
+        const SizedBox(width: 10),
+        ElevatedButton(
+          onPressed: () {
+            context.read<MatrixBloc>().add(RotateMatrix());
+          },
+          child: const Text("Rotar"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMatrixView(BuildContext context) {
+    return BlocBuilder<MatrixBloc, MatrixState>(
+      builder: (context, state) {
+        if (state is MatrixInitial || state is MatrixUpdated) {
+          final matrix = state is MatrixInitial
+              ? (state).matrix
+              : (state as MatrixUpdated).matrix;
+          return buildMatrixViewDisplay(matrix);
+        } else if (state is MatrixError) {
+          return Text(state.message, style: const TextStyle(color: Colors.red));
+        }
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+
+  Widget buildMatrixViewDisplay(List<List<int>> matrix) {
     int size = matrix.length;
     return Column(
         children: List.generate(size, (i) {
@@ -101,4 +108,3 @@ class MatrixScreenState extends State<MatrixScreen> {
     }));
   }
 }
-
